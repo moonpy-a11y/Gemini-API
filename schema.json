@@ -1,0 +1,32 @@
+[
+  {
+    "name": "original_text",
+    "type": "STRING",
+    "mode": "NULLABLE",
+    "description": "Original text extracted from image using Vision API"
+  },
+  {
+    "name": "locale",
+    "type": "STRING",
+    "mode": "NULLABLE",
+    "description": "Language locale detected in the image"
+  },
+  {
+    "name": "translated_text",
+    "type": "STRING",
+    "mode": "NULLABLE",
+    "description": "Text translated to Japanese using Translation API"
+  },
+  {
+    "name": "file_name",
+    "type": "STRING",
+    "mode": "NULLABLE",
+    "description": "Source image filename from Cloud Storage"
+  },
+  {
+    "name": "processing_timestamp",
+    "type": "TIMESTAMP",
+    "mode": "NULLABLE",
+    "description": "Timestamp when the image was processed"
+  }
+]
