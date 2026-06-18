@@ -1,0 +1,43 @@
+steps:
+  # Step 1: Build the Docker image
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'build'
+    args:
+      - 'build'
+      - '-t'
+      - 'gcr.io/$PROJECT_ID/gemini-api-processor:$SHORT_SHA'
+      - '-t'
+      - 'gcr.io/$PROJECT_ID/gemini-api-processor:latest'
+      - '-f'
+      - 'docker/Dockerfile'
+      - '.'
+
+  # Step 2: Push image to Container Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'push'
+    args:
+      - 'push'
+      - 'gcr.io/$PROJECT_ID/gemini-api-processor:$SHORT_SHA'
+
+  # Step 3: Deploy to Cloud Run
+  - name: 'gcr.io/cloud-builders/gke-deploy'
+    id: 'deploy'
+    args:
+      - 'run'
+      - '--filename=docker/'
+      - '--image=gcr.io/$PROJECT_ID/gemini-api-processor:$SHORT_SHA'
+      - '--location=$_CLOUD_RUN_REGION'
+      - '--filename=docker/'
+
+images:
+  - 'gcr.io/$PROJECT_ID/gemini-api-processor:$SHORT_SHA'
+  - 'gcr.io/$PROJECT_ID/gemini-api-processor:latest'
+
+options:
+  machineType: 'N1_HIGHCPU_8'
+
+substitutions:
+  _CLOUD_RUN_REGION: 'us-central1'
+  _SERVICE_NAME: 'gemini-api-processor'
+
+serviceAccount: 'projects/$PROJECT_ID/serviceAccounts/cloud-builds@$PROJECT_ID.iam.gserviceaccount.com'
